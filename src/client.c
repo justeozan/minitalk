@@ -6,7 +6,7 @@
 /*   By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:43 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/01/29 17:32:10 by ozasahin         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:54:27 by ozasahin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,16 @@
 
 int	g_bit_handler;
 
-void	validation_server(int signo)
-{
-	if (signo == SIGUSR2)
-	{
-		ft_printf("Message sent and received.\n");
-		exit(EXIT_SUCCESS);
-	}
-	else if (signo == SIGUSR1)
-		g_bit_handler = 1;
-}
+// void	validation_server(int signo)
+// {
+// 	if (signo == SIGUSR2)
+// 	{
+// 		ft_printf("Message sent and received.\n");
+// 		exit(EXIT_SUCCESS);
+// 	}
+// 	else if (signo == SIGUSR1)
+// 		g_bit_handler = 1;
+// }
 
 int	check_av(int ac, char **av)
 {
@@ -78,8 +78,8 @@ int	main(int ac, char **av)
 
 	pid = check_av(ac, av);
 	i = -1;
-	signal(SIGUSR1, validation_server);
-	signal(SIGUSR2, validation_server);
+	// signal(SIGUSR1, validation_server);
+	// signal(SIGUSR2, validation_server);
 	while (av[2][++i])
 		send_bit(pid, av[2][i]);
 	send_bit(pid, '\n');
