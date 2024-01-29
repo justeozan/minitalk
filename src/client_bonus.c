@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   client.c                                           :+:      :+:    :+:   */
+/*   client_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:43 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/01/29 11:20:43 by ozasahin         ###   ########.fr       */
+/*   Updated: 2024/01/29 17:34:35 by ozasahin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,73 +14,15 @@
 
 int	g_bit_handler;
 
-// void	ft_send_bits(int pid, char c)
-// {
-// 	int	bit;
-
-// 	bit = 0;
-// 	while (bit < 0)
-// 	{
-// 		if ((c & (1 << bit)))
-// 			kill(pid, SIGUSR1);
-// 		else
-// 			kill(pid, SIGUSR2);
-// 		usleep(100);
-// 		bit++;
-// 	}
-// }
-
-// int	main(int ac, char **av)
-// {
-// 	int	pid;
-// 	int	i;
-
-// 	i = 0;
-// 	if (ac == 3)
-// 	{
-// 		pid = ft_atoi(av[1]);
-// 		while (av[2][i] != '\0')
-// 		{
-// 			ft_send_bits(pid, av[2][i]);
-// 			i++;
-// 		}
-// 		ft_send_bits(pid, '\n');
-// 	}
-// 	else
-// 	{
-// 		ft_printf("Error");
-// 		return (1);
-// 	}
-// 	return (0);
-// }
-
-int	validation_server(int signal)
+void	validation_server(int signo)
 {
-	if (signal == SIGUSR2)
+	if (signo == SIGUSR2)
 	{
 		ft_printf("Message sent and received.\n");
 		exit(EXIT_SUCCESS);
 	}
-	else if (signal == SIGUSR1)
+	else if (signo == SIGUSR1)
 		g_bit_handler = 1;
-}
-
-void	send_bit(int pid, char c)
-{
-	int	bit;
-
-	bit = __CHAR_BIT__ * sizeof(c) - 1;
-	while (bit >= 0)
-	{
-		g_bit_handler = 0;
-		if (c & (1 << bit))
-			kill(pid, SIGUSR1);
-		else
-			kill(pid, SIGUSR2);
-		pid--;
-		while (g_bit_handler != 1)
-			usleep(100);
-	}
 }
 
 int	check_av(int ac, char **av)
@@ -111,6 +53,24 @@ int	check_av(int ac, char **av)
 	return (pid);
 }
 
+void	send_bit(int pid, char c)
+{
+	int	bit;
+
+	bit = __CHAR_BIT__ * sizeof(c) - 1;
+	while (bit >= 0)
+	{
+		g_bit_handler = 0;
+		if (c & (1 << bit))
+			kill(pid, SIGUSR1);
+		else
+			kill(pid, SIGUSR2);
+		bit--;
+		while (g_bit_handler != 1)
+			usleep(100);
+	}
+}
+
 int	main(int ac, char **av)
 {
 	int	pid;
@@ -118,12 +78,12 @@ int	main(int ac, char **av)
 
 	pid = check_av(ac, av);
 	i = -1;
-	// signal(SIGUSR1, validation_server); //b
-	// signal(SIGUSR2, validation_server); //b
+	signal(SIGUSR1, validation_server);
+	signal(SIGUSR2, validation_server);
 	while (av[2][++i])
 		send_bit(pid, av[2][i]);
-	send(pid, '\n');
-	send(pid, '\0');
+	send_bit(pid, '\n');
+	send_bit(pid, 0);
 	while (1)
-		pause ();
+		pause();
 }
