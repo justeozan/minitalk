@@ -44,15 +44,15 @@ void	handler_signal(int signal, int *info, void *context)
 int	main(void)
 {
 	int					pid;
-	sigset_t			signal;
+	sigset_t			signals;
 	struct sigaction	action;
 
 	pid = getpid();
-	sigemtyset(&signal);
-	sigaddset(&signal, SIGUSR1);
-	sigaddset(&signal, SIGUSR2);
-	action.sa_flags = signal;
-	action.sa_mask = signal;
+	sigemptyset(&signals);
+	sigaddset(&signals, SIGUSR1);
+	sigaddset(&signals, SIGUSR2);
+	action.sa_flags = signals;
+	action.sa_mask = signals;
 	action.sa_handler = NULL;
 	action.sa_sigaction = handler_signal;
 	sigaction(SIGUSR1, &action, NULL);
