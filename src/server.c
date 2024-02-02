@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sei <sei@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:51 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/02/01 11:28:04 by sei              ###   ########.fr       */
+/*   Updated: 2024/02/02 01:37:13 by marvin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,12 +18,12 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 	static int				bit = -1;
 
 	(void)context;
-	(void)info;
-	// if (kill(info->si_pid, 0) < 0)
-	// {
-	// 	ft_printf("ERROR : cant send signal to pid: %d\n", info->si_pid);
-	// 	exit(EXIT_FAILURE);
-	// }
+	// (void)info;
+	if (kill(info->si_pid, 0) < 0)
+	{
+		ft_printf("ERROR : cant send signal to pid: %d\n", info->si_pid);
+		exit(EXIT_FAILURE);
+	}
 	if (bit < 0)
 		bit = __CHAR_BIT__ * sizeof(c) - 1;
 	if (signal == SIGUSR1)
@@ -32,10 +32,11 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 		c &= ~(1 << bit);
 	if (!bit && c)
 		write(1, &c, 1);
-	// else if (!bit && !c)
-	// 	kill(info->si_pid, SIGUSR2);
+	else if (!bit && !c)
+		kill(info->si_pid, SIGUSR2);
+		// return ;
 	bit--;
-	// kill(info->si_pid, SIGUSR1);
+	kill(info->si_pid, SIGUSR1);
 }
 
 int	main(void)
