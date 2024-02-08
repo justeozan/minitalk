@@ -1,8 +1,10 @@
 SERVER = src/server.c
 CLIENT = src/client.c
 
+
 O_SERVER = ${SERVER:.c=.o}
 O_CLIENT = ${CLIENT:.c=.o}
+
 
 NAME_SERVER = server
 NAME_CLIENT = client

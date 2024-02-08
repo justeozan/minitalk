@@ -17,7 +17,10 @@
 # include <stdlib.h>
 # include <stddef.h>
 # include <stdarg.h>
+# include <stdbool.h>
 
+/*-------------err-------------*/
+void	ft_print_error(char *str, int screen, bool exit_status);
 /*-------------file-------------*/
 void	ft_putchar_fd(char c, int fd);
 void	ft_putendl_fd(char *s, int fd);

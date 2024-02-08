@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: marvin <marvin@student.42.fr>              +#+  +:+       +#+        */
+/*   By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:51 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/02/02 01:37:13 by marvin           ###   ########.fr       */
+/*   Updated: 2024/02/08 17:18:43 by ozasahin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
+
 
 void	handler_signal(int signal, siginfo_t *info, void *context)
 {
@@ -18,7 +19,6 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 	static int				bit = -1;
 
 	(void)context;
-	// (void)info;
 	if (kill(info->si_pid, 0) < 0)
 	{
 		ft_printf("ERROR : cant send signal to pid: %d\n", info->si_pid);
@@ -34,7 +34,6 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 		write(1, &c, 1);
 	else if (!bit && !c)
 		kill(info->si_pid, SIGUSR2);
-		// return ;
 	bit--;
 	kill(info->si_pid, SIGUSR1);
 }
