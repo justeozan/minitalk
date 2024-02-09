@@ -12,11 +12,36 @@
 
 #include "../include/minitalk.h"
 
+char	*ft_realloc(char *str, int l, char c)
+{
+	char	*new_str;
+	int		i;
+
+	new_str = (char *)malloc(sizeof(char) * (l + 2));
+	if (!new_str)
+		return (NULL);
+	i = 0;
+	if (str)
+	{
+		while (str[i])
+		{
+			new_str[i] = str[i];
+			i++;
+		}
+	}
+	new_str[i] = c;
+	i++;
+	new_str[i] = '\0';
+	free(str);
+	return (new_str);
+}
 
 void	handler_signal(int signal, siginfo_t *info, void *context)
 {
 	static unsigned char	c = 0;
 	static int				bit = -1;
+	static int				i = 0;
+	static char				*dest = NULL;
 
 	(void)context;
 	if (kill(info->si_pid, 0) < 0)
@@ -31,9 +56,13 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
 	if (!bit && c)
-		write(1, &c, 1);
+		dest = ft_realloc(dest, i++, c);
 	else if (!bit && !c)
+	{
+		ft_printf("%s", dest);
+		free(dest);
 		kill(info->si_pid, SIGUSR2);
+	}
 	bit--;
 	kill(info->si_pid, SIGUSR1);
 }
