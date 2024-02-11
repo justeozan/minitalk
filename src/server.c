@@ -6,11 +6,20 @@
 /*   By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:51 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/02/08 17:18:43 by ozasahin         ###   ########.fr       */
+/*   Updated: 2024/02/11 14:43:16 by ozasahin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
+
+void	print_str(char **str, unsigned long long *i, siginfo_t *info)
+{
+	ft_printf("%s", *str);
+	free(*str);
+	*str = NULL;
+	*i = 0;
+	kill(info->si_pid, SIGUSR2);
+}
 
 char	*ft_realloc(char *str, int l, char c)
 {
@@ -38,17 +47,14 @@ char	*ft_realloc(char *str, int l, char c)
 
 void	handler_signal(int signal, siginfo_t *info, void *context)
 {
-	static unsigned char	c = 0;
-	static int				bit = -1;
-	static int				i = 0;
-	static char				*dest = NULL;
+	static unsigned char		c = 0;
+	static int					bit = -1;
+	static unsigned long long	i = 0;
+	static char					*dest = NULL;
 
 	(void)context;
 	if (kill(info->si_pid, 0) < 0)
-	{
-		ft_printf("ERROR : cant send signal to pid: %d\n", info->si_pid);
 		exit(EXIT_FAILURE);
-	}
 	if (bit < 0)
 		bit = __CHAR_BIT__ * sizeof(c) - 1;
 	if (signal == SIGUSR1)
@@ -58,11 +64,7 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 	if (!bit && c)
 		dest = ft_realloc(dest, i++, c);
 	else if (!bit && !c)
-	{
-		ft_printf("%s", dest);
-		free(dest);
-		kill(info->si_pid, SIGUSR2);
-	}
+		print_str(&dest, &i, info);
 	bit--;
 	kill(info->si_pid, SIGUSR1);
 }

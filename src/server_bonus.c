@@ -3,19 +3,54 @@
 /*                                                        :::      ::::::::   */
 /*   server_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: sei <sei@student.42.fr>                    +#+  +:+       +#+        */
+/*   By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/25 11:06:51 by ozasahin          #+#    #+#             */
-/*   Updated: 2024/02/01 11:56:23 by sei              ###   ########.fr       */
+/*   Updated: 2024/02/11 14:46:31 by ozasahin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
+void	print_str(char **str, unsigned long long *i, siginfo_t *info)
+{
+	ft_printf("%s", *str);
+	free(*str);
+	*str = NULL;
+	*i = 0;
+	kill(info->si_pid, SIGUSR2);
+}
+
+char	*ft_realloc(char *str, int l, char c)
+{
+	char	*new_str;
+	int		i;
+
+	new_str = (char *)malloc(sizeof(char) * (l + 2));
+	if (!new_str)
+		return (NULL);
+	i = 0;
+	if (str)
+	{
+		while (str[i])
+		{
+			new_str[i] = str[i];
+			i++;
+		}
+	}
+	new_str[i] = c;
+	i++;
+	new_str[i] = '\0';
+	free(str);
+	return (new_str);
+}
+
 void	handler_signal(int signal, siginfo_t *info, void *context)
 {
-	static unsigned char	c = 0;
-	static int				bit = -1;
+	static unsigned char		c = 0;
+	static int					bit = -1;
+	static unsigned long long	i = 0;
+	static char					*dest = NULL;
 
 	(void)context;
 	if (kill(info->si_pid, 0) < 0)
@@ -30,9 +65,9 @@ void	handler_signal(int signal, siginfo_t *info, void *context)
 	else if (signal == SIGUSR2)
 		c &= ~(1 << bit);
 	if (!bit && c)
-		write(1, &c, 1);
+		dest = ft_realloc(dest, i++, c);
 	else if (!bit && !c)
-		kill(info->si_pid, SIGUSR2);
+		print_str(&dest, &i, info);
 	bit--;
 	kill(info->si_pid, SIGUSR1);
 }
