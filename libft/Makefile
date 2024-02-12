@@ -64,7 +64,7 @@ CFLAGS	= -Wall -Wextra -Werror
 RM	= rm -f
 
 .c.o:	libft.h
-		${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
+		@${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 ${NAME}:	${OBJS}
 			@ar rc ${NAME} ${OBJS}
@@ -72,10 +72,10 @@ ${NAME}:	${OBJS}
 all:		${NAME}
 
 clean:
-			${RM} ${OBJS}
+			@${RM} ${OBJS}
 
 fclean:		clean
-			${RM} ${NAME}
+			@${RM} ${NAME}
 
 re:		fclean all
 
