@@ -1,3 +1,5 @@
+.DEFAULT_GOAL: all
+
 SERVER = src/server.c
 CLIENT = src/client.c
 
@@ -11,7 +13,7 @@ NAME_CLIENT = client
 
 CFLAGS = -Werror -Wextra -Wall
 
-all: ${NAME_SERVER} $(NAME_CLIENT)
+all: force ${NAME_SERVER} $(NAME_CLIENT)
 
 $(NAME_SERVER): $(O_SERVER)
 	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_SERVER) -o $(NAME_SERVER) -Llibft -lft
@@ -29,7 +31,7 @@ O_B_CLIENT = ${B_CLIENT:.c=.o}
 NAME_SERVER_B = serverb
 NAME_CLIENT_B = clientb
 
-bonus: ${NAME_SERVER_B} $(NAME_CLIENT_B)
+bonus: force ${NAME_SERVER_B} $(NAME_CLIENT_B)
 
 $(NAME_SERVER_B): $(O_B_SERVER)
 	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_B_SERVER) -o $(NAME_SERVER_B) -Llibft -lft
@@ -38,17 +40,22 @@ $(NAME_CLIENT_B): $(O_B_CLIENT)
 	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_B_CLIENT) -o $(NAME_CLIENT_B) -Llibft -lft
 # FIN-BONUS -------------------------------------------
 
-%.o: %.c include/minitalk.h
+%.o: %.c include/minitalk.h Makefile
 	@$(CC) $(CFLAGS) -Iinclude -Ilibft -c $< -o $@
 
 clean:
 	@$(RM) $(O_SERVER) $(O_CLIENT) $(O_B_SERVER) $(O_B_CLIENT)
+	@make clean -C libft
 
 fclean: clean
 	@$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVER_B) $(NAME_CLIENT_B)
+	@make fclean -C libft
+
+force:
+	make -C libft
 
 re: fclean all
 
 reb: fclean bonus
 
-.PHONY: clean fclean re all
+.PHONY: all bonus clean fclean force re reb 

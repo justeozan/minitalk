@@ -67,7 +67,7 @@ RM	= rm -f
 		${CC} ${CFLAGS} -c $< -o ${<:.c=.o}
 
 ${NAME}:	${OBJS}
-			ar rc ${NAME} ${OBJS}
+			@ar rc ${NAME} ${OBJS}
 
 all:		${NAME}
 
@@ -78,3 +78,5 @@ fclean:		clean
 			${RM} ${NAME}
 
 re:		fclean all
+
+.PHONY: all clean fclean re
