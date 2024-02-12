@@ -1,61 +1,83 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2024/02/12 14:35:48 by ozasahin          #+#    #+#              #
+#    Updated: 2024/02/12 15:33:54 by ozasahin         ###   ########.fr        #
+#                                                                              #
+# **************************************************************************** #
+
 .DEFAULT_GOAL: all
 
-SERVER = src/server.c
-CLIENT = src/client.c
+# Executable names
+NAME_SERVER =	server
+NAME_CLIENT =	client
 
+# Source file paths
+SRC_SERVER		=	src/server.c
+SRC_CLIENT		=	src/client.c
 
-O_SERVER = ${SERVER:.c=.o}
-O_CLIENT = ${CLIENT:.c=.o}
+# Object file paths & names
+OBJ_SERVER	=	$(patsubst src/%.c,obj/%.o,$(SRC_SERVER))
+OBJ_CLIENT	=	$(patsubst src/%.c,obj/%.o,$(SRC_CLIENT))
 
+# Controls
+CC			=	gcc
+CFLAGS		=	-Wall -Wextra -Werror
+RM			=	rm -f
 
-NAME_SERVER = server
-NAME_CLIENT = client
+all:	force $(NAME_SERVER) $(NAME_CLIENT)
 
-CFLAGS = -Werror -Wextra -Wall
+$(NAME_SERVER):	$(OBJ_SERVER)
+		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_SERVER) -o $(NAME_SERVER) -Llibft -lft
 
-all: force ${NAME_SERVER} $(NAME_CLIENT)
-
-$(NAME_SERVER): $(O_SERVER)
-	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_SERVER) -o $(NAME_SERVER) -Llibft -lft
-
-$(NAME_CLIENT): $(O_CLIENT)
-	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_CLIENT) -o $(NAME_CLIENT) -Llibft -lft
+$(NAME_CLIENT):	$(OBJ_CLIENT)
+		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_CLIENT) -o $(NAME_CLIENT) -Llibft -lft
 
 # BONUS ------------------------------------------------
-B_SERVER = src/server_bonus.c
-B_CLIENT = src/client_bonus.c
+# Executable names (bonus)
+NAME_SERVER_B		=	server_bonus
+NAME_CLIENT_B		=	client_bonus
 
-O_B_SERVER = ${B_SERVER:.c=.o}
-O_B_CLIENT = ${B_CLIENT:.c=.o}
+# Source file paths (bonus)
+SRC_SERVER_BONUS	=	src/server_bonus.c
+SRC_CLIENT_BONUS	=	src/client_bonus.c
 
-NAME_SERVER_B = serverb
-NAME_CLIENT_B = clientb
+# Object file paths & names (bonus)
+OBJ_SERVER_BONUS	=	$(patsubst src/%.c,obj/%.o,$(SRC_SERVER_BONUS))
+OBJ_CLIENT_BONUS	=	$(patsubst src/%.c,obj/%.o,$(SRC_CLIENT_BONUS))
 
-bonus: force ${NAME_SERVER_B} $(NAME_CLIENT_B)
+bonus:	force $(NAME_SERVER_B) $(NAME_CLIENT_B)
 
-$(NAME_SERVER_B): $(O_B_SERVER)
-	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_B_SERVER) -o $(NAME_SERVER_B) -Llibft -lft
+$(NAME_SERVER_B):	$(OBJ_SERVER_BONUS)
+		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_SERVER_BONUS) -o $(NAME_SERVER_B) -Llibft -lft
 
-$(NAME_CLIENT_B): $(O_B_CLIENT)
-	@$(CC) $(CFLAGS) -Iinclude -Ilibft $(O_B_CLIENT) -o $(NAME_CLIENT_B) -Llibft -lft
-# FIN-BONUS -------------------------------------------
+$(NAME_CLIENT_B):	$(OBJ_CLIENT_BONUS)
+		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_CLIENT_BONUS) -o $(NAME_CLIENT_B) -Llibft -lft
+# END-BONUS -------------------------------------------
 
-%.o: %.c include/minitalk.h Makefile
-	@$(CC) $(CFLAGS) -Iinclude -Ilibft -c $< -o $@
+obj/%.o:	src/%.c include/minitalk.h Makefile | obj
+		@$(CC) $(CFLAGS) -Iinclude -Ilibft -c $< -o $@
+
+obj:
+			mkdir -p obj
 
 clean:
-	@$(RM) $(O_SERVER) $(O_CLIENT) $(O_B_SERVER) $(O_B_CLIENT)
-	@make clean -C libft
+		@$(RM) $(OBJ_SERVER) $(OBJ_CLIENT) $(OBJ_SERVER_BONUS) $(OBJ_CLIENT_BONUS)
+		@make clean -C libft
 
-fclean: clean
-	@$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVER_B) $(NAME_CLIENT_B)
-	@make fclean -C libft
+fclean:		clean
+		@$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVER_B) $(NAME_CLIENT_B)
+		@make fclean -C libft
 
 force:
-	make -C libft
+		@make -C libft
 
-re: fclean all
+re:			fclean all
 
-reb: fclean bonus
+reb:		fclean bonus
 
-.PHONY: all bonus clean fclean force re reb 
+.PHONY:		all bonus clean fclean force re reb
