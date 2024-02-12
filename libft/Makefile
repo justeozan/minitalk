@@ -76,7 +76,7 @@ SRCS	=	\
 
 OBJS	=	$(SRCS:.c=.o)
 
-#Commands
+# Controls
 CC		=	gcc
 CFLAGS	=	-Wall -Wextra -Werror
 RM		=	rm -f
