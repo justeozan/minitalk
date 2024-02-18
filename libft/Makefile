@@ -86,8 +86,8 @@ all:		$(NAME)
 $(NAME):	$(OBJS)
 			@ar rc $(NAME) $(OBJS)
 
-.c.o:		libft.h
-			@$(CC) $(CFLAGS) -c $< -o $(<:.c=.o)
+%.o:		%.c libft.h
+			@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
 			@$(RM) $(OBJS)

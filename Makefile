@@ -63,18 +63,18 @@ obj/%.o:	src/%.c include/minitalk.h Makefile | obj
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft -c $< -o $@
 
 obj:
-			mkdir -p obj
+		mkdir -p obj
 
 clean:
 		@$(RM) $(OBJ_SERVER) $(OBJ_CLIENT) $(OBJ_SERVER_BONUS) $(OBJ_CLIENT_BONUS)
-		@make clean -C libft
+		@make clean -C libft -s
 
 fclean:		clean
 		@$(RM) $(NAME_SERVER) $(NAME_CLIENT) $(NAME_SERVER_B) $(NAME_CLIENT_B)
-		@make fclean -C libft
+		@make fclean -C libft -s
 
 force:
-		@make -C libft
+		@make -C libft -s
 
 re:			fclean all
 
