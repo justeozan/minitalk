@@ -6,7 +6,7 @@
 #    By: ozasahin <ozasahin@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/02/12 14:35:48 by ozasahin          #+#    #+#              #
-#    Updated: 2024/02/12 16:37:04 by ozasahin         ###   ########.fr        #
+#    Updated: 2024/02/19 10:32:35 by ozasahin         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,10 +31,10 @@ RM			=	rm -f
 
 all:	force $(NAME_SERVER) $(NAME_CLIENT)
 
-$(NAME_SERVER):	$(OBJ_SERVER)
+$(NAME_SERVER):	$(OBJ_SERVER) libft/libft.a
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_SERVER) -o $(NAME_SERVER) -Llibft -lft
 
-$(NAME_CLIENT):	$(OBJ_CLIENT)
+$(NAME_CLIENT):	$(OBJ_CLIENT) libft/libft.a
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_CLIENT) -o $(NAME_CLIENT) -Llibft -lft
 
 # BONUS ------------------------------------------------
@@ -52,14 +52,14 @@ OBJ_CLIENT_BONUS	=	$(patsubst src/%.c,obj/%.o,$(SRC_CLIENT_BONUS))
 
 bonus:	force $(NAME_SERVER_B) $(NAME_CLIENT_B)
 
-$(NAME_SERVER_B):	$(OBJ_SERVER_BONUS)
+$(NAME_SERVER_B):	$(OBJ_SERVER_BONUS) libft/libft.a
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_SERVER_BONUS) -o $(NAME_SERVER_B) -Llibft -lft
 
-$(NAME_CLIENT_B):	$(OBJ_CLIENT_BONUS)
+$(NAME_CLIENT_B):	$(OBJ_CLIENT_BONUS) libft/libft.a
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft $(OBJ_CLIENT_BONUS) -o $(NAME_CLIENT_B) -Llibft -lft
 # END-BONUS -------------------------------------------
 
-obj/%.o:	src/%.c include/minitalk.h Makefile | obj
+obj/%.o:	src/%.c include/minitalk.h libft/libft.h Makefile | obj
 		@$(CC) $(CFLAGS) -Iinclude -Ilibft -c $< -o $@
 
 obj:

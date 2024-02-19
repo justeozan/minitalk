@@ -33,9 +33,9 @@ int	check_av(int ac, char **av)
 		exit(EXIT_FAILURE);
 	}
 	pid = ft_atoi(av[1]);
-	if (pid == 0)
+	if (pid == -1)
 	{
-		ft_putstr_fd("Error: PID 0 is reserved for the kernel.\n", 2);
+		ft_putstr_fd("Error: PID -1 is reserved for the kernel.\n", 2);
 		exit(EXIT_FAILURE);
 	}
 	i = -1;
